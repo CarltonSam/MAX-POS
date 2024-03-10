@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laundry POS Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="#orders">Orders</a></li>
+                <li><a href="#items">Items</a></li>
+                <li><a href="#customers">Customers</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Laundry POS Dashboard</h1>
+            <div class="status-sections">
+                <div class="status-item">
+                    <h2>Ready</h2>
+                    <p id="ready-orders">0</p>
+                </div>
+                <div class="status-item">
+                    <h2>Ready to Deliver</h2>
+                    <p id="ready-to-deliver-orders">0</p>
+                </div>
+                <div class="status-item">
+                    <h2>Delivered</h2>
+                    <p id="delivered-orders">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
