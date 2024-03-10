@@ -28,9 +28,8 @@ class ItemDetails(Base):
     __tablename__ = "itemprice"
 
     item_id = Column(String,primary_key=True,index=True)
-    washing_price = Column(Integer)
-    ironing_price = Column(Integer)
-    washing_ironing_price = Column(Integer,default = washing_price+ironing_price)
+    item_name = Column(String)
+    price = Column(Integer)
 
 class OrderDetails(Base):
     __tablename__ = "orders"
@@ -48,4 +47,19 @@ class OrderDetails(Base):
     advance_paid = Column(Integer)
     due = Column(Integer)
 
-    
+class OrderItems(Base):
+    __tablename__ = "orderitems"
+
+    order_id = Column(String)
+    customer_id = Column(String)
+    item_id = Column(String)
+    item_name = Column(String)
+    item_quantity = Column(Integer)
+    item_price = Column(Integer)
+    total_price = Column(Integer)
+    __table_args__ = (
+        PrimaryKeyConstraint('order_id', 'item_id'),
+    )
+
+
+Base.metadata.create_all(bind=engine)
