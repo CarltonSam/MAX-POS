@@ -1,41 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laundry POS Dashboard</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
 </head>
 <body>
     <div class="main-container">
         <div class="sidebar">
-            <h2>Menu</h2>
+            <h2><img src="static/css/max_logo.jpg"></h2>
             <ul>
-                <li><a href="#orders">Orders</a></li>
-                <li><a href="#items">Items</a></li>
-                <li><a href="#customers">Customers</a></li>
+                <li><a href="#orders"><i class="fa-solid fa-box"></i>ORDERS</a></li>
+                <li><a href="#items"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
+                <li><a href="#customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
+            </ul>
+            <!-- New items added below --><br><br><br><br><br>
+            <ul class="bottom-items">
+                <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
+                <li><a href="#logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
             </ul>
         </div>
 
         <div class="main-content">
-            <h1>Laundry POS Dashboard</h1>
             <div class="status-sections">
                 <div class="status-item">
-                    <h2>Ready</h2>
-                    <p id="ready-orders">0</p>
+                    <h2><i class="fa-solid fa-circle-info"></i> ORDERS</h2>
+                    <p id="ready-orders">{{result}}</p>
                 </div>
                 <div class="status-item">
-                    <h2>Ready to Deliver</h2>
+                    <h2><i class="fa-solid fa-box"></i>   READY</h2>
                     <p id="ready-to-deliver-orders">0</p>
                 </div>
                 <div class="status-item">
-                    <h2>Delivered</h2>
+                    <h2><i class="fa-solid fa-truck-fast"></i>    DELIVERED</h2>
                     <p id="delivered-orders">0</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>

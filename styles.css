@@ -2,7 +2,7 @@ body {
     font-family: 'Rubik', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url("/static/css/bg.png");
+    background-image: url("bg.png");
     background-size: cover; /* Cover the entire background */
     background-position: center; /* Center the image */
     height: 55vh;

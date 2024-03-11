@@ -1,26 +1,37 @@
-from fastapi import FastAPI,APIRouter,Depends
+import fastapi
+from fastapi import FastAPI, APIRouter, Depends, Request,status,Form
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from . import get_db
 from routers.models import UserDetails
 from pydantic import BaseModel
-from fastapi import FastAPI
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-
+from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.templating import Jinja2Templates
+app = FastAPI()
 router = APIRouter()
+templates = Jinja2Templates(directory="templates")
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-class user(BaseModel):
-    email:str
-    password:str
+class User(BaseModel):
+    email: str
+    password: str
 
-@router.post("/login")
-async def login(details:user,db: Session = Depends(get_db)):
-    user_details=db.query(UserDetails).filter(UserDetails.email == details.email, UserDetails.hashed_password == details.password).first()
+@router.get('/',response_class=HTMLResponse,include_in_schema=False)
+def form(request:Request):
+    return templates.TemplateResponse("/index.html",{"request":request})
+
+
+@router.post("/",response_class=HTMLResponse)
+async def login(email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    user_details = db.query(UserDetails).filter(UserDetails.email == email, UserDetails.hashed_password == password).first()
     if user_details:
-        return {"message : login successful"}
+        response= fastapi.responses.RedirectResponse(url='/dashboard',status_code=status.HTTP_302_FOUND)
+        return response
     else:
-        return {"message : login failed"}
+        return {"message": "Login failed"}
     
+@router.get("/dashboard",response_class=HTMLResponse)
+def dashboard(request:Request):
+    print("hello world")
+    return templates.TemplateResponse("/dashboard.html",{"request":request})
