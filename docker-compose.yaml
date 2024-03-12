@@ -5,7 +5,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      db: service_started
+      db:
+        condition: service_started
   db:
     image: postgres
     container_name: local_pgdb
