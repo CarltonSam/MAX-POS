@@ -2,7 +2,7 @@ body {
     font-family: 'Rubik', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url("/static/css/bg.png");
+    background-image: url("bg.png");
     background-size: cover; /* Cover the entire background */
     background-position: center; /* Center the image */
     height: 55vh;
@@ -133,7 +133,7 @@ button:hover {
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-left: 240px; /* Adjusted to accommodate sidebar */
+    margin-left: 200px; /* Adjusted to accommodate sidebar */
     min-height: 70vh;
 }
 
@@ -168,3 +168,135 @@ h1 {
     margin: 0;
     color: #1e2389; /* Dark Blue */
 }
+.item-list { 
+    background-color: #fff;/* Light Gray */
+    border-radius: 10px;
+    padding:5px;
+    flex: 1;
+    box-shadow: 0 5px 7px #1e2389;
+    width:990px;
+    height: 500px;
+}
+
+.add {
+    padding: 5px 10px; /* Adjust padding as needed */
+    font-size: x-large; /* Adjust font size as needed */
+    width:40px;
+    height:40px;
+}
+.toolbar{
+    position:absolute;
+    right:40px;
+    top:55px;
+}
+
+.table-data{
+    position: relative;
+    top:70px;
+    margin:10px;
+}
+
+.itme-list tbody tr:nth-child(odd) {
+    background-color: #8ea1e0; /* Light Gray */
+}
+
+.itme-list tbody tr:nth-child(even) {
+    background-color: #e6e6e6; /* Lighter Gray */
+}
+
+#dialog-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#dialog-box {
+    display: none;
+    height: 360px;
+    width: 400px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+.dialog-content {
+    position: relative;
+}
+
+.dialog-close {
+    position: absolute;
+    top: 5px;
+    right: 5px; /* Adjusted for spacing */
+    cursor: pointer;
+    font-size: 20px;
+    color: #aaa;
+    border: none; /* Remove default button styles */
+    background-color: transparent; /* Transparent background */
+    border-radius: 50%; /* Make button curved */
+    padding: 5px; /* Adjust padding as needed */
+}
+.dialog-content label {
+    /* Styles for labels */
+    font-size: small;
+    margin-bottom: 10px; /* Add spacing below labels */
+    font-weight: bold; /* Make labels bold */
+}
+
+.dialog-content input[type="text"] {
+    /* Styles for text input fields */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px; /* Add spacing below input fields */
+}
+
+.dialog-content button[type="submit"] {
+    /* Styles for submit button */
+    padding: 10px 20px; /* Adjust padding as needed */
+    background-color: #1e2389; /* Dark Blue */
+    color: #fff; /* White text */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dialog-content button[type="submit"]:hover {
+    background-color: #171b67; /* Darken color on hover */
+}
+
+#table-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 999; /* Ensure the overlay appears above the table */
+}
+.display th{
+    background-color: #171b67;
+    color: white;
+}
+/* Define your desired background colors for odd and even rows */
+table#item-table tbody tr:nth-child(odd) {
+    background-color: #f7f5f5;
+}
+table#item-table tbody tr:nth-child(even) {
+    background-color: #c2cbe6;
+}
+
+
+
+

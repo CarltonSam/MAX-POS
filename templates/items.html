@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <link href="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.css" rel="stylesheet">
+    <style>
+        .sidebar ul li a.highlight {
+            background-color: #1e2389; /* Dark Blue */
+            color: #fff; /* White */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="toolbar">
+            <button class="add"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="sidebar">
+            <h2><img src="static/css/max_logo.jpg"></h2>
+            <ul>
+                <li><a href="#orders"><i class="fa-solid fa-box"></i>ORDERS</a></li>
+                <li><a href="/items" class="highlight"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
+                <li><a href="#customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
+            </ul>
+            <!-- New items added below --><br><br><br><br><br>
+            <ul class="bottom-items">
+                <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
+                <li><a href="#logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
+            </ul>
+        </div>
+        <br>
+        <div class="main-content">
+
+            <div class="item-list">
+                <div class ="table-data">
+                    <table class="display" id="item-table">
+                        <thead>
+                            <tr>
+                                <th >Item ID</th>
+                                <th >Item Name</th>
+                                <th >Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ item.item_id }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.price }}</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="dialog-overlay"></div> <!-- Overlay for dimming table rows -->
+            <div id="dialog-box">
+                <div class="dialog-content">
+                    <span class="dialog-close">&times;</span>
+                    <h2>Add Item</h2>
+                    <form id="add-item-form" action="/createItems" method="POST">
+                        <label for="item_id">Item ID:</label>
+                        <input type="text" id="item_id" name="item_id" required><br>
+                        <label for="item_name">Item Name:</label>
+                        <input type="text" id="item_name" name="item_name" required><br>
+                        <label for="price">Item Price:</label>
+                        <input type="text" id="price" name="price" required><br>
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#item-table').DataTable({
+                "paging": false, // Disable pagination
+                "scrollY": "270px", // Set a fixed height
+                "scrollCollapse": true
+            });
+    
+            // Show dialog box and overlay when the "Add" button is clicked
+            $('.add').click(function() {
+                $('#dialog-overlay').fadeIn();
+                $('#dialog-box').fadeIn();
+                $('#table-overlay').fadeIn(); // Show the overlay
+            });
+    
+            // Hide dialog box and overlay when the close button or overlay is clicked
+            $('#dialog-overlay, .dialog-close').click(function() {
+                $('#dialog-overlay').fadeOut();
+                $('#dialog-box').fadeOut();
+                $('#table-overlay').fadeOut(); // Hide the overlay
+            });
+    
+            // Prevent dialog box from closing when clicking inside it
+            $('#dialog-box').click(function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+</body>
+</html>

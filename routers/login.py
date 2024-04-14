@@ -31,7 +31,4 @@ async def login(email: str = Form(...), password: str = Form(...), db: Session =
     else:
         return {"message": "Login failed"}
     
-@router.get("/dashboard",response_class=HTMLResponse)
-def dashboard(request:Request):
-    print("hello world")
-    return templates.TemplateResponse("/dashboard.html",{"request":request})
+

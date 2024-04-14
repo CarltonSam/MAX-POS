@@ -8,13 +8,16 @@ from routers import login, customerdetails, itemdetails
 from fastapi import FastAPI, APIRouter, Depends, Request
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from routers.models import UserDetails
+from routers.models import ItemDetails
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.templating import Jinja2Templates
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 
 app.mount("/static",StaticFiles(directory="static"),name="static")
@@ -29,3 +32,9 @@ app.add_middleware(
 app.include_router(login.router)
 app.include_router(customerdetails.router)
 app.include_router(itemdetails.router)
+
+@app.get("/dashboard",response_class=HTMLResponse)
+def dashboard(request:Request):
+    print("hello world")
+    return templates.TemplateResponse("/dashboard.html",{"request":request})
+
