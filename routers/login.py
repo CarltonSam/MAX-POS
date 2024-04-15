@@ -28,7 +28,7 @@ async def login(email: str = Form(...), password: str = Form(...), db: Session =
     if user_details:
         return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     else:
-        return {"message": "Login failed"}
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     
 @router.get('/logout',response_class=HTMLResponse,include_in_schema=False)
 def form(request:Request):

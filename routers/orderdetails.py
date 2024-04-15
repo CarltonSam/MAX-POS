@@ -76,4 +76,4 @@ def cart(order_id: str = Form(...),customer_id: str = Form(...),cartData: List =
     db.add(db_orderdetails)
     db.commit()
 
-    return {"message": "Checkout successful"}
+    return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
