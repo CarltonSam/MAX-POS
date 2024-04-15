@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse,HTMLResponse
 from fastapi.templating import Jinja2Templates
 from routers.models import UserDetails
-from routers import login, customerdetails, itemdetails
+from routers import login, customerdetails,dashboarddetails, itemdetails,orderdetails
 from fastapi import FastAPI, APIRouter, Depends, Request
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -32,9 +32,6 @@ app.add_middleware(
 app.include_router(login.router)
 app.include_router(customerdetails.router)
 app.include_router(itemdetails.router)
-
-@app.get("/dashboard",response_class=HTMLResponse)
-def dashboard(request:Request):
-    print("hello world")
-    return templates.TemplateResponse("/dashboard.html",{"request":request})
+app.include_router(orderdetails.router)
+app.include_router(dashboarddetails.router)
 

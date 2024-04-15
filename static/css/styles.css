@@ -147,6 +147,7 @@ h1 {
     display: flex;
     justify-content: space-around;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .status-item {
@@ -168,14 +169,14 @@ h1 {
     margin: 0;
     color: #1e2389; /* Dark Blue */
 }
-.item-list { 
-    background-color: #fff;/* Light Gray */
+.item-list {
+    background-color: #fff;
     border-radius: 10px;
-    padding:5px;
-    flex: 1;
+    padding: 20px;
     box-shadow: 0 5px 7px #1e2389;
-    width:990px;
-    height: 500px;
+    width: calc(100% - 50px); /* Adjusted width, considering the sidebar width */
+    margin-left: 10px; /* Adjusted to accommodate sidebar */
+    min-height: 500px; /* Adjusted min-height */
 }
 
 .add {
@@ -192,7 +193,7 @@ h1 {
 
 .table-data{
     position: relative;
-    top:70px;
+    top:20px;
     margin:10px;
 }
 
@@ -296,6 +297,105 @@ table#item-table tbody tr:nth-child(odd) {
 table#item-table tbody tr:nth-child(even) {
     background-color: #c2cbe6;
 }
+#dialog-for {
+    display: none;
+    background-color: #fff; /* White background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px; /* Maximum width for responsiveness */
+}
+
+.dialog-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px; /* Add some space between the two columns */
+}
+
+.dialog-form .left-column,
+.dialog-form .right-column {
+    width: calc(50% - 10px); /* Half width for each column with space in between */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    padding-right: 15px;
+}
+
+.dialog-form label,
+.dialog-form input[type="text"] {
+    width: 100%; /* Full width for labels and input fields */
+    display: block; /* Display as block to stack them vertically */
+}
+
+.dialog-form input[type="date"] {
+    padding: 10px; /* Match padding with text input fields */
+    border: 1px solid #ccc; /* Match border with text input fields */
+    border-radius: 4px; /* Match border-radius with text input fields */
+    margin-bottom: 10px; /* Add spacing between input fields */
+    width: 100%; /* Full width for labels and input fields */
+    display: block; /* Display as block to stack them vertically */
+}
+
+.dialog-form label {
+    font-size: small;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.dialog-form input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+    /* Style for Save button */
+.dialog-form #save-btn {
+    padding: 10px 20px;
+    background-color: #1e2389;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for the button */
+    margin-top: 10px; /* Add margin on top */
+}
+
+/* Hover effect for Save button */
+.dialog-form #save-btn:hover {
+    background-color: #171b67;
+}
+
+/* Style for Close button */
+.dialog-close {
+    padding: 10px 20px;
+    background-color: #ccc;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Full width for the button */
+    margin-top: 10px; /* Add margin on top */
+}
+
+/* Hover effect for Close button */
+.dialog-close:hover {
+    background-color: #999;
+}
+
+#dialog-for-view {
+
+    display: none;
+    background-color: white; /* Set background color to white */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    height: 400px !important;
+    width: 800px !important; /* Adjust width as needed */
+}
+
 
 
 

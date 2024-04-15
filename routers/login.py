@@ -26,9 +26,12 @@ def form(request:Request):
 async def login(email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user_details = db.query(UserDetails).filter(UserDetails.email == email, UserDetails.hashed_password == password).first()
     if user_details:
-        response= fastapi.responses.RedirectResponse(url='/dashboard',status_code=status.HTTP_302_FOUND)
-        return response
+        return RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
     else:
         return {"message": "Login failed"}
+    
+@router.get('/logout',response_class=HTMLResponse,include_in_schema=False)
+def form(request:Request):
+    return templates.TemplateResponse("/index.html",{"request":request})
     
 

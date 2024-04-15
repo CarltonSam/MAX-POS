@@ -1,35 +1,43 @@
-from fastapi import FastAPI,APIRouter,Depends
-from passlib.context import CryptContext
+import fastapi
+from fastapi import FastAPI,APIRouter,Depends,status,Request,Form
 from sqlalchemy.orm import Session
 from . import get_db
-from routers.models import CustomerDetails
+from routers.models import ItemDetails,CustomerDetails
 from pydantic import BaseModel
 from fastapi import FastAPI
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import or_
+from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.templating import Jinja2Templates
+
+templates = Jinja2Templates(directory="templates")
 
 router = APIRouter()
 
-class customer(BaseModel):
-    customer_id : str
-    name : str
-    address : str
-    phone_no : int
-    whatsapp_no : int
+class items(BaseModel):
+    item_id : str
+    item_name : str
+    price : str
 
-@router.post("/createCustomer")
-async def create_customer(details:customer,db: Session = Depends(get_db)):
-    cust_details=db.query(CustomerDetails).filter(CustomerDetails.customer_id == details.customer_id).first()
-    if cust_details:
-        return {"message" : "customer with same customer id already exists"}
+@router.get('/customers',response_class=HTMLResponse)
+def form(request:Request,db: Session = Depends(get_db)):
+    all_customers = db.query(CustomerDetails).all()
+    print(all_customers)
+    return templates.TemplateResponse("/customers.html",{"request":request,"customers":all_customers})
+
+@router.post('/createCustomer')
+async def create_customer(customer_id: str = Form(...), name: str = Form(...), address: str = Form(...),phone_no: int = Form(...),whatsapp_no: int = Form(...) ,db: Session = Depends(get_db)):
+    item_details = db.query(CustomerDetails).filter(CustomerDetails.customer_id == customer_id).first()
+    if item_details:
+        return {"message": "Customer with same Customer id already exists"}
     else:
-        db_customer = CustomerDetails(
-            customer_id = details.customer_id,
-            name = details.name,
-            address = details.address,
-            phone_no = details.phone_no,
-            whatsapp_no = details.whatsapp_no
-            )
-    db.add(db_customer)
-    db.commit()
-    return {"message" : "Customer Details Added!"}
+        db_item = CustomerDetails(
+            customer_id=customer_id,
+            name=name,
+            address=address,
+            phone_no=phone_no,
+            whatsapp_no=whatsapp_no
+        )
+        db.add(db_item)
+        db.commit()
+        response = RedirectResponse(url='/customers', status_code=status.HTTP_302_FOUND)
+        return response

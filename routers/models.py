@@ -34,18 +34,18 @@ class ItemDetails(Base):
 class OrderDetails(Base):
     __tablename__ = "orders"
 
-    order_id = Column(String,primary_key=True,index=True)
+    order_id = Column(String, primary_key=True, index=True)
     date = Column(Date)
     customer_id = Column(String)
     cust_name = Column(String)
-    total_items = Column(Integer)
+    total_items = Column(Integer, default=0)  # Default value for total_items
     status = Column(String)
-    ready_date = Column(Date)
-    delivery_date = Column(Date)
-    cash = Column(Integer)
-    bank = Column(Integer)
-    advance_paid = Column(Integer)
-    due = Column(Integer)
+    ready_date = Column(String)
+    delivery_date = Column(String)
+    cash = Column(Integer, default=0)  # Default value for cash
+    bank = Column(Integer, default=0)  # Default value for bank
+    advance_paid = Column(Integer, default=0)  # Default value for advance_paid
+    due = Column(Integer, default=0)  # Default value for due
 
 class OrderItems(Base):
     __tablename__ = "orderitems"

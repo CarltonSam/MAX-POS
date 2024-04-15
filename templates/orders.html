@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+    <link href="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.css" rel="stylesheet">
+    <style>
+        .sidebar ul li a.highlight {
+            background-color: #1e2389; /* Dark Blue */
+            color: #fff; /* White */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="toolbar">
+            <button class="add"><i class="fas fa-plus"></i></button>
+        </div>
+        <div class="sidebar">
+            <h2><img src="static/css/max_logo.jpg"></h2>
+            <ul>
+                <li><a href="/dashboard"><i class="fa-solid fa-gauge-high"></i>DASHBOARD</a></li>
+                <li><a href="/orders"  class="highlight"><i class="fa-solid fa-box"></i>ORDERS</a></li>
+                <li><a href="/items"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
+                <li><a href="/customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
+            </ul>
+            <!-- New items added below --><br><br><br><br><br>
+            <ul class="bottom-items">
+                <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
+                <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
+            </ul>
+        </div>
+        <br>
+        <div class="main-content">
+
+            <div class="item-list">
+                <div class ="table-data">
+                    <table class="display" id="item-table">
+                        <thead>
+                            <tr>
+                                <th >Order ID</th>
+                                <th >Date</th>
+                                <th >Customer ID</th>
+                                <th>Name</th>
+                                <th>Total Items</th>
+                                <th >Status </th>
+                                <th >Ready Date</th>
+                                <th>Delivery Date</th>
+                                <th>Cash</th>
+                                <th>Bank</th>
+                                <th>Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ order.order_id }}</td>
+                                <td>{{ order.date }}</td>
+                                <td>{{ order.customer_id }}</td>
+                                <td>{{ order.cust_name }}</td>
+                                <td>{{ order.total_items }}</td>
+                                <td>{{ order.status }}</td>
+                                <td>{{ order.ready_date }}</td>
+                                <td>{{ order.delivery_date }}</td>
+                                <td>{{ order.cash }}</td>
+                                <td>{{ order.bank }}</td>
+                                <td>{{ order.advance_paid }}</td>
+                                <td>{{ order.due }}</td>
+                            </tr>
+                            <!-- Add more rows as needed -->
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="dialog-overlay"></div> <!-- Overlay for dimming table rows -->
+            <div id="dialog-box">
+                <div class="dialog-content">
+                    <h2>Add Order</h2>
+                        <form id="add-order-form" action="/createOrder" method="POST">
+                            <label for="order_id">Order ID:</label>
+                            <input type="text" id="order_id" name="order_id" required><br>
+                            <label for="date">Date:</label>
+                            <input type="date" id="date" name="date" required><br>
+                            <label for="customer_id">Customer ID:</label>
+                            <input type="text" id="customer_id" name="customer_id" required><br>
+                            <label for="cust_name">Customer Name:</label>
+                            <input type="text" id="cust_name" name="cust_name" required><br>
+                            <label for="total_items">Total Items:</label>
+                            <input type="number" id="total_items" name="total_items" required><br>
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="pending">Pending</option>
+                                <option value="processing">Processing</option>
+                                <option value="completed">Completed</option>
+                            </select><br>
+                            <label for="ready_date">Ready Date:</label>
+                            <input type="date" id="ready_date" name="ready_date"><br>
+                            <label for="delivery_date">Delivery Date:</label>
+                            <input type="date" id="delivery_date" name="delivery_date"><br>
+                            <label for="cash">Cash:</label>
+                            <input type="number" id="cash" name="cash"><br>
+                            <label for="bank">Bank:</label>
+                            <input type="number" id="bank" name="bank"><br>
+                            <label for="advance_paid">Advance Paid:</label>
+                            <input type="number" id="advance_paid" name="advance_paid"><br>
+                            <label for="due">Due:</label>
+                            <input type="number" id="due" name="due"><br>
+
+                            <div id="items">
+                                <!-- This is where dynamically added items will appear -->
+                            </div>
+                            <button type="button" id="add-item-btn">Add Item</button>
+                            <button type="submit">Submit Order</button>
+                        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#item-table').DataTable({
+                "paging": false, // Disable pagination
+                "scrollY": "270px", // Set a fixed height
+                "scrollCollapse": true
+            });
+    
+            // Show dialog box and overlay when the "Add" button is clicked
+            $('.add').click(function() {
+                $('#dialog-overlay').fadeIn();
+                $('#dialog-box').fadeIn();
+                $('#table-overlay').fadeIn(); // Show the overlay
+            });
+    
+            // Prevent dialog box from closing when clicking inside it
+            $('#dialog-box').click(function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var itemId = 1; // Initialize item ID counter
+
+            // Add item input fields dynamically
+            $('#add-item-btn').click(function() {
+                var itemHtml = '<div class="item">';
+                itemHtml += '<label for="item_name_' + itemId + '">Item Name:</label>';
+                itemHtml += '<input type="text" id="item_name_' + itemId + '" name="item_name_' + itemId + '" required><br>';
+                itemHtml += '<label for="item_quantity_' + itemId + '">Quantity:</label>';
+                itemHtml += '<input type="number" id="item_quantity_' + itemId + '" name="item_quantity_' + itemId + '" required><br>';
+                // Add more fields for item details as needed
+                itemHtml += '</div>';
+                $('#items').append(itemHtml);
+                itemId++; // Increment item ID
+            });
+        });
+    </script>
+</body>
+</html>
