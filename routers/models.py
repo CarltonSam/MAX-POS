@@ -21,8 +21,8 @@ class CustomerDetails(Base):
     customer_id = Column(String,primary_key=True,index=True)
     name = Column(String)
     address = Column(String)
-    phone_no = Column(Integer)
-    whatsapp_no = Column(Integer)
+    phone_no = Column(String)
+    whatsapp_no = Column(String)
 
 class ItemDetails(Base):
     __tablename__ = "itemprice"

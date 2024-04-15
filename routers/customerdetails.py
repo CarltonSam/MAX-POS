@@ -34,8 +34,8 @@ async def create_customer(customer_id: str = Form(...), name: str = Form(...), a
             customer_id=customer_id,
             name=name,
             address=address,
-            phone_no=phone_no,
-            whatsapp_no=whatsapp_no
+            phone_no=str(phone_no),
+            whatsapp_no=str(whatsapp_no)
         )
         db.add(db_item)
         db.commit()
