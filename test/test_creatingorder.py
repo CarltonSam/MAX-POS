@@ -9,10 +9,14 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 class TestCreatingorder():
   def setup_method(self, method):
-    self.driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.headless = False  # Set to True to run in headless mode
+    self.driver = webdriver.Chrome(service=Service('/path/to/chromedriver'), options=chrome_options)
     self.vars = {}
   
   def teardown_method(self, method):
