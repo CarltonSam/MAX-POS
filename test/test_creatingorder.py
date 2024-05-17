@@ -16,7 +16,7 @@ class TestCreatingorder():
   def setup_method(self, method):
     chrome_options = Options()
     chrome_options.headless = False  # Set to True to run in headless mode
-    self.driver = webdriver.Chrome(service=Service('/path/to/chromedriver'), options=chrome_options)
+    self.driver = webdriver.Chrome()
     self.vars = {}
   
   def teardown_method(self, method):
