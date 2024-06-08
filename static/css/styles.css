@@ -263,6 +263,22 @@ h1 {
     margin-bottom: 10px; /* Add spacing below input fields */
 }
 
+.dialog-content input[type="date"] {
+    /* Styles for text input fields */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px; /* Add spacing below input fields */
+}
+
+.dialog-content select{
+    /* Styles for text input fields */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px; /* Add spacing below input fields */
+}
+
 .dialog-content button[type="submit"] {
     /* Styles for submit button */
     padding: 10px 20px; /* Adjust padding as needed */
@@ -346,6 +362,13 @@ table#item-table tbody tr:nth-child(even) {
     font-size: small;
     margin-bottom: 10px;
     font-weight: bold;
+}
+
+.dialog-form select{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
 }
 
 .dialog-form input[type="text"] {
@@ -442,6 +465,27 @@ table#item-table tbody tr:nth-child(even) {
 
 .filter-section button:hover {
     background-color: #171b67;
+}
+
+.filter-section select,
+.dialog-form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%; /* Full width for the select element */
+    margin-bottom: 10px; /* Add spacing below the select element */
+    box-sizing: border-box; /* Include padding and border in the width calculation */
+    font-family: 'Rubik', Arial, sans-serif; /* Use Rubik font for consistency */
+}
+
+/* Adjust the appearance of the dropdown arrow */
+.filter-section select {
+    appearance: none; /* Remove default appearance */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>'); /* Custom arrow icon */
+    background-repeat: no-repeat; /* Ensure the icon doesn't repeat */
+    background-position: right 10px center; /* Position the icon on the right side */
+    background-size: 15px; /* Adjust the size of the icon */
+    padding-right: 30px; /* Leave space for the icon */
 }
 
 /* Media query for responsiveness */
