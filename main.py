@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse,HTMLResponse
 from fastapi.templating import Jinja2Templates
 from routers.models import UserDetails
-from routers import login, customerdetails,dashboarddetails, itemdetails,orderdetails
+from routers import login,orderitems, customerdetails,dashboarddetails, itemdetails,orderdetails,expensedetails,cashbook
 from fastapi import FastAPI, APIRouter, Depends, Request
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
@@ -34,4 +34,7 @@ app.include_router(customerdetails.router)
 app.include_router(itemdetails.router)
 app.include_router(orderdetails.router)
 app.include_router(dashboarddetails.router)
+app.include_router(expensedetails.router)
+app.include_router(cashbook.router)
+app.include_router(orderitems.router)
 

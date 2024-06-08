@@ -26,13 +26,12 @@
             <ul>
                 <li><a href="/dashboard"><i class="fa-solid fa-gauge-high"></i>DASHBOARD</a></li>
                 <li><a href="/orders"><i class="fa-solid fa-box"></i>ORDERS</a></li>
-                <li><a href="/items" class="highlight"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
+                <li><a href="/items" ><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
                 <li><a href="/customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
                 <li><a href="/expenses"><i class="fa-solid fa-money-bill"></i></i>EXPENSES</a></li>
                 <li><a href="/cashbook"><i class="fa-solid fa-file-invoice-dollar"></i>CASHBOOK</a></li>
-                <li><a href="/orderitems"><i class="fa-solid fa-shirt"></i>ORDER ITEMS</a></li>
+                <li><a href="/orderitems" class="highlight"><i class="fa-solid fa-shirt"></i>ORDER ITEMS</a></li>
             </ul>
-            <!-- New items added below -->
             <ul class="bottom-items">
                 <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
@@ -46,21 +45,26 @@
                     <table class="display" id="item-table">
                         <thead>
                             <tr>
+                                <th >Order ID</th>
+                                <th >Customer ID</th>
                                 <th >Item ID</th>
                                 <th >Item Name</th>
-                                <th >Price</th>
-                                <th>Action</th>
+                                <th >Item Price</th>
+                                <th >Quantity</th>
+                                <th >Total Price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in items %}
+                            {% for order in orders %}
                             <tr>
-                                <td>{{ item.item_id }}</td>
-                                <td>{{ item.item_name }}</td>
-                                <td>{{ item.price }}</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                </td>
+                                <td>{{ order.order_id }}</td>
+                                <td>{{ order.customer_id }}</td>
+                                <td>{{ order.item_id }}</td>
+                                <td>{{ order.item_name }}</td>
+                                <td>{{ order.item_price }}</td>
+                                <td>{{ order.item_quantity }}</td>
+                                <td>{{ order.total_price }}</td>
+
                             </tr>
                             <!-- Add more rows as needed -->
                             {% endfor %}
@@ -68,42 +72,9 @@
                     </table>
                 </div>
             </div>
-            <div id="dialog-overlay"></div> <!-- Overlay for dimming table rows -->
-            <div id="dialog-box">
-                <div class="dialog-content">
-                    <h2>Add Item</h2>
-                    <form id="add-item-form" action="/createItems" method="POST">
-                        <label for="item_id">Item ID:</label>
-                        <input type="text" id="item_id" name="item_id" required><br>
-                        <label for="item_name">Item Name:</label>
-                        <input type="text" id="item_name" name="item_name" required><br>
-                        <label for="price">Item Price:</label>
-                        <input type="text" id="price" name="price" required><br>
-                        <button type="submit">Add</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
-    <div id="dialog-for" title="Edit Order Details" style="display: none;">
-        <form class="dialog-form" method="POST" action="/editItem">
-            <div class="left-column">
-                <label for="item_id">Item ID:</label>
-                <input type="text" id="item_id" name="item_id" required><br>
-                <label for="item_name">Item Name:</label>
-                <input type="text" id="item_name" name="item_name" required><br>
-                <label for="price">Price:</label>
-                <input type="text" id="price" name="price" required><br>
-            </div>
-            <div class="right-column">
-            </div>
-            <button type="submit">Submit Order</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -111,22 +82,6 @@
                 "paging": false, // Disable pagination
                 "scrollY": "270px", // Set a fixed height
                 "scrollCollapse": true
-            });
-
-            $('#item-table tbody').on('click', '.edit-btn', function() {
-                var rowData = $(this).closest('tr').find('td');
-                var dialogForm = $(".dialog-form");
-
-                // Populate dialog form with row data
-                dialogForm.find("#item_id").val(rowData.eq(0).text());
-                dialogForm.find("#item_name").val(rowData.eq(1).text());
-                dialogForm.find("#price").val(rowData.eq(2).text());
-                // Populate other fields similarly
-
-                // Open dialog box
-                $("#dialog-for").dialog({
-                    modal: true
-                });
             });
     
             // Show dialog box and overlay when the "Add" button is clicked

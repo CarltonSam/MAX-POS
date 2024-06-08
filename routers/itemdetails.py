@@ -21,11 +21,10 @@ class items(BaseModel):
 @router.get('/items',response_class=HTMLResponse,include_in_schema=False)
 def form(request:Request,db: Session = Depends(get_db)):
     all_items = db.query(ItemDetails).all()
-    print(all_items)
     return templates.TemplateResponse("/items.html",{"request":request,"items":all_items})
 
 @router.post('/createItems')
-async def create_customer(item_id: str = Form(...), item_name: str = Form(...), price: str = Form(...), db: Session = Depends(get_db)):
+async def create_customer(item_id: str = Form(...), item_name: str = Form(...), price: int = Form(...), db: Session = Depends(get_db)):
     item_details = db.query(ItemDetails).filter(or_(ItemDetails.item_id == item_id, ItemDetails.item_name == item_name)).first()
     if item_details:
         return {"message": "item with same item id or item name already exists"}
@@ -39,3 +38,16 @@ async def create_customer(item_id: str = Form(...), item_name: str = Form(...), 
         db.commit()
         response = RedirectResponse(url='/items', status_code=status.HTTP_302_FOUND)
         return response
+    
+@router.post('/editItem')
+async def edit_order(item_id: str = Form(...),
+                     item_name: str = Form(...),
+                     price: str = Form(...),
+                     db: Session = Depends(get_db)):
+    order = db.query(ItemDetails).filter_by(item_id=item_id).first()
+    order.item_id = item_id
+    order.item_name = item_name
+    order.price = price
+    db.commit()
+    response = RedirectResponse(url='/items', status_code=status.HTTP_302_FOUND)
+    return response

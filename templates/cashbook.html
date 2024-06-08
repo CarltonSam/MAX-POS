@@ -17,16 +17,17 @@
     </style>
 </head>
 <body>
+    
     <div class="main-container">
         <div class="sidebar">
             <h2><img src="static/css/max_logo.jpg"></h2>
             <ul>
-                <li><a href="/dashboard" class="highlight"><i class="fa-solid fa-gauge-high"></i>DASHBOARD</a></li>
+                <li><a href="/dashboard"><i class="fa-solid fa-gauge-high"></i>DASHBOARD</a></li>
                 <li><a href="/orders"><i class="fa-solid fa-box"></i>ORDERS</a></li>
                 <li><a href="/items"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
                 <li><a href="/customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
                 <li><a href="/expenses"><i class="fa-solid fa-money-bill"></i></i>EXPENSES</a></li>
-                <li><a href="/cashbook"><i class="fa-solid fa-file-invoice-dollar"></i>CASHBOOK</a></li>
+                <li><a href="/cashbook" class = "highlight"><i class="fa-solid fa-file-invoice-dollar"></i>CASHBOOK</a></li>
                 <li><a href="/orderitems"><i class="fa-solid fa-shirt"></i>ORDER ITEMS</a></li>
             </ul>
             <ul class="bottom-items">
@@ -34,7 +35,6 @@
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
             </ul>
         </div>
-
         <div class="main-content">
             <div class="status-sections">
                 <div class="status-item">
@@ -61,23 +61,17 @@
                     <label for="till-date">Till Date:</label>
                     <input type="date" id="till-date">
                 </div>
-                <div class="filter-group">
-                    <label for="status-filter">Status:</label>
-                    <select id="status-filter">
-                        <option value="">All</option>
-                        <option value="RECEIVED">RECEIVED</option>
-                        <option value="READY">READY</option>
-                        <option value="DELIVERED">DELIVERED</option>
-                    </select>
-                </div>
                 <button id="apply-filters">Apply Filters</button>
                 <button id="download-btn">Download Excel</button>
             </div>
 
             <!-- Totals Section -->
             <div class="totals-section">
-                <p>Total Items: <span id="total-items">{{total_items}}</span></p>
-                <p>Total Price: <span id="total-price">{{total_price}}</span></p>
+                <p>Total Amount: <span id="total-price">{{total_price}}</span>
+                    Debit: <span id="total-debit">{{total_debit}}</span>
+                    Credit: <span id="total-credit">{{total_credit}}</span>
+                </p>
+
             </div>
 
             <div class="item-list">
@@ -85,112 +79,27 @@
                     <table class="display" id="item-table">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
                                 <th>Date</th>
-                                <th>Customer ID</th>
-                                <th>Customer Name</th>
-                                <th>Total Items</th>
-                                <th>Status</th>
-                                <th>Ready Date</th>
-                                <th>Delivery Date</th>
-                                <th>Note</th>
-                                <th>Cash</th>
-                                <th>Advance Paid</th>
-                                <th>Due</th>
-                                <th>Action</th>
+                                <th>Category</th>
+                                <th>Text</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for order in orders %}
+                            {% for order in cashbook %}
                             <tr>
-                                <td>{{ order.order_id }}</td>
                                 <td>{{ order.date }}</td>
-                                <td>{{ order.customer_id }}</td>
-                                <td>{{ order.cust_name }}</td>
-                                <td>{{ order.total_items }}</td>
-                                <td>{{ order.status }}</td>
-                                <td>{{ order.ready_date }}</td>
-                                <td>{{ order.delivery_date }}</td>
-                                <td>{{ order.note }}</td>
-                                <td>{{ order.cash }}</td>
-                                <td>{{ order.advance_paid }}</td>
-                                <td>{{ order.due }}</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                </td>
+                                <td>{{ order.category }}</td>
+                                <td>{{ order.text }}</td>
+                                <td>{{ order.debit }}</td>
+                                <td>{{ order.credit }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Dialog Box HTML -->
-    <div id="dialog-for" title="Edit Order Details" style="display: none;">
-        <form class="dialog-form" method="POST" action="/editOrder">
-            <div class="left-column">
-                <label for="order_id">Order ID:</label>
-                <input type="text" id="order_id" name="order_id">
-                <label for="order_date">Date:</label>
-                <input type="date" id="order_date" name="order_date">
-                <label for="customer_id">Customer ID:</label>
-                <input type="text" id="customer_id" name="customer_id">
-                <label for="cust_name">Customer Name:</label>
-                <input type="text" id="cust_name" name="cust_name">
-                <label for="total_items">Total Items:</label>
-                <input type="text" id="total_items" name="total_items">
-                <label for="order_status">Status:</label>
-                <input type="text" id="order_status" name="order_status">
-            </div>
-            <div class="right-column">
-                <label for="ready_date">Ready Date:</label>
-                <input type="date" id="ready_date" name="ready_date">
-                <label for="delivery_date">Delivery Date:</label>
-                <input type="date" id="delivery_date" name="delivery_date">
-                <label for="note">Note:</label>
-                <input type="text" id="note" name="note">
-                <label for="cash">Cash:</label>
-                <input type="text" id="cash" name="cash">
-                <label for="advance_paid">Advance Paid:</label>
-                <input type="text" id="advance_paid" name="advance_paid">
-                <label for="due">Due:</label>
-                <input type="text" id="due" name="due">
-                <!-- Add other fields with name attributes similarly -->
-            </div>
-            <button type="submit">Submit Order</button>
-        </form>
-    </div>
-    <input type="hidden" id="selected-order-id" value="">
-    <div id="dialog-for-view" title="View Order Details" style="display: none;">
-        <div class="table-data">
-            <table class="display" id="view-item-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer ID</th>
-                        <th>Item ID</th>
-                        <th>Item Name</th>
-                        <th>Item Quantity</th>
-                        <th>Item Price</th>
-                        <th>Total Price</th>
-                    </tr>
-                </thead>
-                <tbody id="view-item-body">
-                    {% for orderItem in orderItems %}
-                    <tr>
-                        <td>{{ orderItem.order_id }}</td>
-                        <td>{{ orderItem.customer_id }}</td>
-                        <td>{{ orderItem.item_id }}</td>
-                        <td>{{ orderItem.item_name }}</td>
-                        <td>{{ orderItem.item_quantity }}</td>
-                        <td>{{ orderItem.item_price }}</td>
-                        <td>{{ orderItem.total_price }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
         </div>
     </div>
 
@@ -204,8 +113,7 @@
         document.getElementById('download-btn').addEventListener('click', function() {
             var fromDate = document.getElementById('from-date').value;
             var tillDate = document.getElementById('till-date').value;
-            var status = document.getElementById('status-filter').value;
-            window.location.href = '/dashboard/download?from_date=' + fromDate + '&till_date=' + tillDate + '&status=' +status;
+            window.location.href = '/cashbook/download?from_date=' + fromDate + '&till_date=' + tillDate;
         });
     </script>
     <script>
@@ -219,17 +127,14 @@
             $('#apply-filters').on('click', function() {
                 var fromDate = $('#from-date').val();
                 var tillDate = $('#till-date').val();
-                var status = $('#status-filter').val();
 
                 // Filter the table based on the inputs
                 $.fn.dataTable.ext.search.push(
                     function(settings, data, dataIndex) {
-                        var date = data[1]; // Use data for the date column
-                        var orderStatus = data[5]; // Use data for the status column
+                        var date = data[0]; // Use data for the date column // Use data for the status column
 
                         if ((fromDate === "" || date >= fromDate) &&
-                            (tillDate === "" || date <= tillDate) &&
-                            (status === "" || orderStatus === status)) {
+                            (tillDate === "" || date <= tillDate) ){
                             return true;
                         }
                         return false;
@@ -253,15 +158,15 @@
 
                 // Populate dialog form with row data
                 dialogForm.find("#order_id").val(rowData.eq(0).text());
-                dialogForm.find("#order_date").val(rowData.eq(1).text());
+                dialogForm.find("#date").val(rowData.eq(1).text());
                 dialogForm.find("#customer_id").val(rowData.eq(2).text());
                 dialogForm.find("#cust_name").val(rowData.eq(3).text());
                 dialogForm.find("#total_items").val(rowData.eq(4).text());
                 dialogForm.find("#order_status").val(rowData.eq(5).text());
                 dialogForm.find("#ready_date").val(rowData.eq(6).text());
                 dialogForm.find("#delivery_date").val(rowData.eq(7).text());
-                dialogForm.find("#cash").val(rowData.eq(9).text());
-                dialogForm.find("#note").val(rowData.eq(8).text());
+                dialogForm.find("#cash").val(rowData.eq(8).text());
+                dialogForm.find("#bank").val(rowData.eq(9).text());
                 dialogForm.find("#advance_paid").val(rowData.eq(10).text());
                 dialogForm.find("#due").val(rowData.eq(11).text());
                 // Populate other fields similarly
@@ -297,13 +202,15 @@
                 var totalPrice = 0;
 
                 table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
-                    var data = this.data();
-                    totalItems += parseInt(data[4]); // Assuming the total items column is at index 4
-                    totalPrice += parseFloat(data[11]); // Assuming cash and bank columns are at indices 8 and 9
+                    var data = this.data(); // Assuming the total items column is at index 4
+                    totalPrice += parseFloat(data[4]) - parseFloat(data[3]);
+                    totalDebit += parseFloat(data[3]);
+                    totalCredit += parseFloat(data[4]); // Assuming cash and bank columns are at indices 8 and 9
                 });
-
-                $('#total-items').text(totalItems);
                 $('#total-price').text(totalPrice.toFixed(2));
+                $('#total-debit').text(totalDebit.toFixed(2));
+                $('#total-credit').text(totalCredit.toFixed(2));
+
             }
         });
     </script>

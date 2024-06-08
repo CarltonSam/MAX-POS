@@ -42,10 +42,10 @@
                 <li><a href="/orders"><i class="fa-solid fa-box"></i>ORDERS</a></li>
                 <li><a href="/items"><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
                 <li><a href="/customers" class="highlight"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
-                <li><a href="/expenses"><i class="fa-solid fa-money-bill"></i></i>EXPENSES</a></li>
-                <li><a href="/cashbook"><i class="fa-solid fa-file-invoice-dollar"></i>CASHBOOK</a></li>
-                <li><a href="/orderitems"><i class="fa-solid fa-shirt"></i>ORDER ITEMS</a></li>
+                <li><a href="/purchases" class="highlight"><i class="fa-solid fa-users-rectangle"></i>PURCHASES</a></li>
+
             </ul>
+            <!-- New items added below --><br><br><br><br><br>
             <ul class="bottom-items">
                 <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
@@ -64,7 +64,6 @@
                                 <th >Address</th>
                                 <th>Phone No.</th>
                                 <th>Whatsapp No.</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,9 +74,6 @@
                                 <td>{{ customer.address }}</td>
                                 <td>{{ customer.phone_no }}</td>
                                 <td>{{ customer.whatsapp_no }}</td>
-                                <td>
-                                    <button class="edit-btn">Edit</button>
-                                </td>
                             </tr>
                             <!-- Add more rows as needed -->
                             {% endfor %}
@@ -106,29 +102,7 @@
             </div>
         </div>
     </div>
-    <div id="dialog-for" title="Edit Order Details" style="display: none;">
-        <form class="dialog-form" method="POST" action="/editCustomer">
-            <div class="left-column">
-                <label for="customer_id">Customer ID:</label>
-                <input type="text" id="customer_id" name="customer_id" required><br>
-                <label for="name">Customer Name:</label>
-                <input type="text" id="name" name="name" required><br>
-                <label for="address">Address:</label>
-                <input type="text" id="address" name="address" required><br>
-                <label for="phone_no">Phone No. :</label>
-                <input type="text" id="phone_no" name="phone_no" required><br>
-                <label for="whatsapp_no">Whatsapp No. :</label>
-                <input type="text" id="whatsapp_no" name="whatsapp_no" required><br>
-            </div>
-            <div class="right-column">
-            </div>
-            <button type="submit">Submit Order</button>
-        </form>
-    </div>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -136,24 +110,6 @@
                 "paging": false, // Disable pagination
                 "scrollY": "270px", // Set a fixed height
                 "scrollCollapse": true
-            });
-
-            $('#item-table tbody').on('click', '.edit-btn', function() {
-                var rowData = $(this).closest('tr').find('td');
-                var dialogForm = $(".dialog-form");
-
-                // Populate dialog form with row data
-                dialogForm.find("#customer_id").val(rowData.eq(0).text());
-                dialogForm.find("#name").val(rowData.eq(1).text());
-                dialogForm.find("#address").val(rowData.eq(2).text());
-                dialogForm.find("#phone_no").val(rowData.eq(3).text());
-                dialogForm.find("#whatsapp_no").val(rowData.eq(4).text());
-                // Populate other fields similarly
-
-                // Open dialog box
-                $("#dialog-for").dialog({
-                    modal: true
-                });
             });
     
             // Show dialog box and overlay when the "Add" button is clicked

@@ -33,19 +33,13 @@ class items(BaseModel):
 @router.get('/orders',response_class=HTMLResponse)
 def form(request:Request,db: Session = Depends(get_db)):
     all_items = db.query(ItemDetails).all()
-    print(all_items)
-    return templates.TemplateResponse("/yrdy.html",{"request":request,"items":all_items})
+    all_customers = db.query(CustomerDetails).all()
+    return templates.TemplateResponse("/yrdy.html",{"request":request,"items":all_items,"customers":all_customers})
 
 @router.post('/checkout')
-def cart(order_id: str = Form(...),customer_id: str = Form(...),cartData: List = Form(...),db: Session = Depends(get_db)):
-    print("Received JSON data:")
-    print(cartData)  # Print the received JSON data
-    # Process cart data as needed
+def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form(...),cartData: List = Form(...),db: Session = Depends(get_db)):
     data=cartData[0]
     list_of_dicts = json.loads(data)
-    print(list_of_dicts)
-    print(order_id)
-    print(customer_id)
     for item in list_of_dicts:
         total_price=int(float(item['quantity'])*float(item['price']))
         db_item = OrderItems(
@@ -66,7 +60,7 @@ def cart(order_id: str = Form(...),customer_id: str = Form(...),cartData: List =
 
     db_orderdetails = OrderDetails(
         order_id=order_id,
-        date=date.today(),
+        date=date,
         customer_id=customer_id,
         cust_name=customer.name,
         total_items=total_quantity,

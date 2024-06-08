@@ -21,7 +21,6 @@ class items(BaseModel):
 @router.get('/customers',response_class=HTMLResponse)
 def form(request:Request,db: Session = Depends(get_db)):
     all_customers = db.query(CustomerDetails).all()
-    print(all_customers)
     return templates.TemplateResponse("/customers.html",{"request":request,"customers":all_customers})
 
 @router.post('/createCustomer')
@@ -41,3 +40,20 @@ async def create_customer(customer_id: str = Form(...), name: str = Form(...), a
         db.commit()
         response = RedirectResponse(url='/customers', status_code=status.HTTP_302_FOUND)
         return response
+    
+@router.post('/editCustomer')
+async def edit_order(customer_id: str = Form(...),
+                     name: str = Form(...),
+                     address: str = Form(...),
+                     phone_no: str = Form(...),
+                     whatsapp_no: int = Form(...),
+                     db: Session = Depends(get_db)):
+    order = db.query(CustomerDetails).filter_by(customer_id=customer_id).first()
+    order.customer_id = customer_id
+    order.name = name
+    order.address = address
+    order.whatsapp_no = whatsapp_no
+    order.phone_no = phone_no
+    db.commit()
+    response = RedirectResponse(url='/customers', status_code=status.HTTP_302_FOUND)
+    return response

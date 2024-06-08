@@ -24,7 +24,7 @@
             position: fixed;
             top: 30px;
             right: 30px;
-            width: 500px;
+            width: 450px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -63,25 +63,41 @@
             font-size: 16px;
             color: #1e2389; /* Dark Blue */
         }
+
+        .main-container {
+            display: flex;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-right: 450px; /* Space for the shopping cart */
+        }
+
+        .item-card-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
         .item-card {
-            width: 200px;
-            padding: 10px;
+            width: calc(20% - 25px); /* 5 items per row with some spacing */
+            padding: 5px;  /* Reduced padding */
             border: 1px solid #ccc;
             border-radius: 10px;
             margin: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #ffffff; /* White */
+            box-sizing: border-box; /* Ensure padding and border are included in the width */
         }
 
         .item-card h3 {
-            margin-top: 10px;
-            font-size: 18px;
+            margin-top: 5px;  /* Reduced margin */
+            font-size: 16px;  /* Reduced font size */
             color: #1e2389; /* Dark Blue */
         }
 
         .item-card p {
             margin-top: 5px;
-            font-size: 14px;
+            font-size: 12px;  /* Reduced font size */
             color: #555;
         }
     </style>
@@ -98,8 +114,10 @@
                 <li><a href="/orders" class="highlight"><i class="fa-solid fa-box"></i>ORDERS</a></li>
                 <li><a href="/items" ><i class="fa-solid fa-toolbox"></i>ITEMS</a></li>
                 <li><a href="/customers"><i class="fa-solid fa-users-rectangle"></i>CUSTOMERS</a></li>
+                <li><a href="/expenses"><i class="fa-solid fa-money-bill"></i></i>EXPENSES</a></li>
+                <li><a href="/cashbook"><i class="fa-solid fa-file-invoice-dollar"></i>CASHBOOK</a></li>
+                <li><a href="/orderitems"><i class="fa-solid fa-shirt"></i>ORDER ITEMS</a></li>
             </ul>
-            <!-- New items added below --><br><br><br><br><br>
             <ul class="bottom-items">
                 <li><a href="#settings"  ><i class="fa-solid fa-gear"></i>  SETTINGS</a></li>
                 <li><a href="#logout"><i class="fa-solid fa-right-from-bracket"></i>  LOGOUT</a></li>
@@ -120,12 +138,20 @@
     <div class="shopping-cart">
         <h2>Shopping Cart</h2>
         <form id="checkout-form" action="/checkout" method="POST">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required><br>
             <label for="customer_id">Customer ID:</label>
-            <input type="text" id="customer_id" name="customer_id" required><br>
+                <select id="customer_id" name="customer_id" required>
+                    <option value="" selected disabled>Select Customer ID</option>
+                    {% for customer in customers %}
+                        <option value="{{ customer.customer_id }}" data-customer-name="{{ customer.name }}">{{ customer.customer_id }}</option>
+                    {% endfor %}
+                </select>
+                <span id="customer_name_label"></span><br>
             <label for="order_id">Order ID:</label>
             <input type="text" id="order_id" name="order_id" required><br>
             <input type="hidden" name="cartData" id="cartData"><br>
-            <button type="submit">Checkout</button>
+            <button type="submit">Save</button>
         </form>
         <table id="cart-table">
             <thead>
@@ -147,7 +173,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
     <script>
+        document.getElementById('download-btn').addEventListener('click', function() {
+            window.location.href = '/cashbook/download';
+        });
+    </script>
+    <script>
         $(document).ready(function() {
+            $('#customer_id').change(function() {
+                    var selectedCustomerName = $('#customer_id option:selected').data('customer-name');
+                    $('#customer_name_label').text('Customer Name: ' + selectedCustomerName);
+                });
             // Function to gather cart data
             function gatherCartData() {
                 var cartData = [];
@@ -189,7 +224,7 @@
                 newRow.append('<td>' + itemName + '</td>');
                 newRow.append('<td>' + price.toFixed(2) + '</td>');
                 newRow.append('<td><input type="number" class="quantity-input" value="1" min="1"></td>');
-                newRow.append('<td class="total"> $' + price.toFixed(2) + '</td>');
+                newRow.append('<td class="total"> ' + price.toFixed(2) + '</td>');
                 newRow.append('<td><button class="remove-item">Remove</button></td>');
 
                 $('#cart-table tbody').append(newRow);
@@ -207,7 +242,7 @@
                 var quantity = $(this).val();
                 var price = parseFloat($(this).closest('tr').find('td:nth-child(3)').text().replace('$', ''));
                 var total = quantity * price;
-                $(this).closest('tr').find('.total').text('$' + total.toFixed(2));
+                $(this).closest('tr').find('.total').text('' + total.toFixed(2));
                 updateTotalPrice();
             });
 
@@ -217,7 +252,7 @@
                 $('#cart-table tbody tr').each(function() {
                     totalPrice += parseFloat($(this).find('.total').text().replace('$', ''));
                 });
-                $('#total-price').text('Total Price: $' + totalPrice.toFixed(2));
+                $('#total-price').text('Total Price: ' + totalPrice.toFixed(2));
             }
 
             // Form submission event handler
