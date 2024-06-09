@@ -39,8 +39,12 @@ def form(request:Request,db: Session = Depends(get_db)):
 @router.post('/checkout')
 def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form(...),cartData: List = Form(...),db: Session = Depends(get_db)):
     data=cartData[0]
+    total=0
+    total_items=0
     list_of_dicts = json.loads(data)
     for item in list_of_dicts:
+        total=total+int(float(item['quantity'])*float(item['price']))
+        total_items=total_items+int(float(item['quantity']))
         total_price=int(float(item['quantity'])*float(item['price']))
         db_item = OrderItems(
             order_id=order_id,
@@ -54,16 +58,14 @@ def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form
         db.add(db_item)
     db.commit()
     customer = db.query(CustomerDetails).filter_by(customer_id=customer_id).first()
-    total_quantity = db.query(func.sum(OrderItems.item_quantity)).filter_by(order_id=order_id).scalar()
-    total_price = db.query(func.sum(OrderItems.total_price)).filter_by(order_id=order_id).scalar()
     db_orderdetails = OrderDetails(
         order_id=order_id,
         date=date,
         customer_id=customer_id,
         cust_name=customer.name,
-        total_items=total_quantity,
+        total_items=total_items,
         status='RECEIVED',
-        due = total_price
+        due = total
         )
     db.add(db_orderdetails)
     db.commit()
