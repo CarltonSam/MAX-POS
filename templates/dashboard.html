@@ -133,15 +133,15 @@
         <form class="dialog-form" method="POST" action="/editOrder">
             <div class="left-column">
                 <label for="order_id">Order ID:</label>
-                <input type="text" id="order_id" name="order_id">
+                <input type="text" id="order_id" name="order_id" readonly>
                 <label for="order_date">Date:</label>
                 <input type="date" id="order_date" name="order_date">
                 <label for="customer_id">Customer ID:</label>
-                <input type="text" id="customer_id" name="customer_id">
+                <input type="text" id="customer_id" name="customer_id" readonly>
                 <label for="cust_name">Customer Name:</label>
-                <input type="text" id="cust_name" name="cust_name">
+                <input type="text" id="cust_name" name="cust_name" readonly>
                 <label for="total_items">Total Items:</label>
-                <input type="text" id="total_items" name="total_items">
+                <input type="text" id="total_items" name="total_items" readonly>
                 <label for="order_status">Status:</label>
                 <select id="order_status" name="order_status">
                     <option value="RECEIVED">RECEIVED</option>
@@ -161,7 +161,7 @@
                 <label for="advance_paid">Advance Paid:</label>
                 <input type="text" id="advance_paid" name="advance_paid">
                 <label for="due">Due:</label>
-                <input type="text" id="due" name="due">
+                <input type="text" id="due" name="due" readonly>
                 <!-- Add other fields with name attributes similarly -->
             </div>
             <button type="submit">Submit Order</button>
