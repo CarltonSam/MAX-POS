@@ -143,3 +143,17 @@ async def edit_order(order_id: str = Form(...),
     db.commit()
     response = RedirectResponse(url='/dashboard', status_code=status.HTTP_302_FOUND)
     return response
+
+@router.post('/deleteOrder')
+async def delete_order(order_id: str = Form(...), db: Session = Depends(get_db)):
+    order = db.query(OrderDetails).filter_by(order_id=order_id).first()
+    order_items=db.query(OrderItems).filter_by(order_id=order_id).all()
+    if order:
+        db.delete(order)
+
+    for item in order_items:
+        db.delete(item)
+
+    db.commit()
+    response = RedirectResponse(url='/dashboard', status_code=status.HTTP_302_FOUND)
+    return response
