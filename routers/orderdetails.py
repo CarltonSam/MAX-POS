@@ -52,12 +52,10 @@ def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form
             total_price=total_price
             )
         db.add(db_item)
-        db.commit()
+    db.commit()
     customer = db.query(CustomerDetails).filter_by(customer_id=customer_id).first()
     total_quantity = db.query(func.sum(OrderItems.item_quantity)).filter_by(order_id=order_id).scalar()
     total_price = db.query(func.sum(OrderItems.total_price)).filter_by(order_id=order_id).scalar()
-    
-
     db_orderdetails = OrderDetails(
         order_id=order_id,
         date=date,

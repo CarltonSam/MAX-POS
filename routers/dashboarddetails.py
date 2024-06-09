@@ -79,7 +79,7 @@ def dashboard(request: Request, from_date: Optional[str] = None, till_date: Opti
         query = query.filter(OrderDetails.status == status)
 
     orders = query.all()
-
+    received = db.query(OrderDetails).filter_by(status="RECEIVED").all()
     ready = db.query(OrderDetails).filter_by(status="READY").all()
     delivered = db.query(OrderDetails).filter_by(status="DELIVERED").all()
 
@@ -89,7 +89,7 @@ def dashboard(request: Request, from_date: Optional[str] = None, till_date: Opti
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
         "orders": orders,
-        "ordered": len(orders),
+        "ordered": len(received),
         "ready": len(ready),
         "delivered": len(delivered),
         "total_items": total_items,
