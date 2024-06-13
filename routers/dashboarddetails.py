@@ -148,6 +148,9 @@ async def edit_order(order_id: str = Form(...),
 async def delete_order(order_id: str = Form(...), db: Session = Depends(get_db)):
     order = db.query(OrderDetails).filter_by(order_id=order_id).first()
     order_items=db.query(OrderItems).filter_by(order_id=order_id).all()
+    cashbook=db.query(Cashbook).filter_by(category=order_id).first()
+    if cashbook:
+        db.delete(cashbook)
     if order:
         db.delete(order)
 
