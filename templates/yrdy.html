@@ -23,8 +23,8 @@
         .shopping-cart {
             position: fixed;
             top: 30px;
-            right: 30px;
-            width: 450px;
+            right: 5px;
+            width: 470px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -52,6 +52,23 @@
 
         #cart-table th {
             background-color: #f2f2f2;
+        }
+
+        #cart-table tbody {
+            display: block;
+            max-height: 230px; /* Adjust height as needed for 6 items */
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        #cart-table thead, #cart-table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed; /* Ensures the table layout is fixed */
+        }
+
+        #cart-table thead {
+            width: calc(100% - 2px); /* Adjust for scrollbar */
         }
 
         #cart-table td input {
@@ -82,8 +99,8 @@
             width: calc(20% - 25px); /* 5 items per row with some spacing */
             padding: 5px;  /* Reduced padding */
             border: 1px solid #ccc;
-            border-radius: 10px;
-            margin: 10px;
+            border-radius: 5px;
+            margin: 5px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             background-color: #ffffff; /* White */
             box-sizing: border-box; /* Ensure padding and border are included in the width */
@@ -95,10 +112,41 @@
             color: #1e2389; /* Dark Blue */
         }
 
+        .item-card h4 {
+            margin-top: 5px;  /* Reduced margin */
+            margin-bottom: 5px;  /* Reduced margin */
+            font-size: 14px;  /* Adjusted font size if needed */
+        }
+
         .item-card p {
             margin-top: 5px;
             font-size: 12px;  /* Reduced font size */
             color: #555;
+        }
+
+        .shopping-cart input[type="text"] {
+            /* Styles for text input fields */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px; /* Add spacing below input fields */
+        }
+
+        .shopping-cart input[type="date"] {
+            /* Styles for text input fields */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            margin-top: 5px; /* Add spacing below input fields */
+        }
+
+        .shopping-cart select{
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            margin-top: 5px; /* Add spacing below input fields */
         }
     </style>
 </head>
@@ -128,8 +176,8 @@
                 {% for item in items %}
                 <div class="item-card">
                     <h3>{{ item.item_name }}</h3>
-                    <h4>{{ item.item_id }}</h4>
-                    <p>Price: {{ item.price }}</p>
+                    <h4>Price: {{ item.price }}</h4>
+                    <p hidden>{{item.item_id}}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -215,9 +263,9 @@
 
             // Double click event to add item to cart
             $('.item-card').dblclick(function() {
-                var itemId = $(this).find('h4').text();
+                var itemId = $(this).find('p').text();
                 var itemName = $(this).find('h3').text();
-                var price = parseFloat($(this).find('p').text().replace('Price: ', ''));
+                var price = parseFloat($(this).find('h4').text().replace('Price: ', ''));
 
                 var newRow = $('<tr>');
                 newRow.append('<td>' + itemId + '</td>');

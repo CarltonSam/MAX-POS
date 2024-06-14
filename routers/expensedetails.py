@@ -79,3 +79,31 @@ async def create_customer(expense_head: Optional[str] = Form(...),expense_name: 
     db.commit()
     response = RedirectResponse(url='/expenses', status_code=status.HTTP_302_FOUND)
     return response
+
+@router.post('/deleteExpense')
+async def delete_expense(date: str = Form(...), expense_name: str = Form(...), expense_head: str = Form(...), expense_amount: str = Form(...), db: Session = Depends(get_db)):
+    expense = db.query(Expenses).filter(
+        Expenses.date == date,
+        Expenses.expense_name == expense_name,
+        Expenses.expense_head == expense_head,
+        Expenses.expense_amount == int(expense_amount)
+    ).first()
+
+    cashbook = db.query(Cashbook).filter(
+        Cashbook.date == date,
+        Cashbook.category == expense_head,
+        Cashbook.text == expense_name,
+        Cashbook.credit == int(expense_amount)
+    ).first()
+
+    if expense:
+        db.delete(expense)
+        db.commit()
+
+    if cashbook:
+        db.delete(cashbook)
+        db.commit()
+
+    response = RedirectResponse(url='/expenses', status_code=status.HTTP_302_FOUND)
+    return response
+

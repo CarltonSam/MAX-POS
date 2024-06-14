@@ -61,6 +61,7 @@
                                 <th>Expense Head</th>
                                 <th >Expense Name</th>
                                 <th >Amount</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,6 +71,9 @@
                                 <td>{{ expense.expense_head}}</td>
                                 <td>{{ expense.expense_name }}</td>
                                 <td>{{ expense.expense_amount }}</td>
+                                <td>
+                                    <button class="delete-btn" data-date="{{expense.date}}" data-expense-name="{{ expense.expense_name }}" data-expense-head="{{ expense.expense_head }}" data-expense-amount="{{ expense.expense_amount }}">Delete</button>
+                                </td>
                             </tr>
                             <!-- Add more rows as needed -->
                             {% endfor %}
@@ -94,7 +98,7 @@
                             <option value="SALARY">Salary</option>
                             <option value="ADVANCE SALARY">Advance Salary</option>
                             <option value="WATER AND ELECTRICITY">Water and Electricity</option>
-                            <option value="GANESAN - SALARY">Ganesan - Salary</option>
+                            <option value="GANESAN">Ganesan</option>
                             <option value="OTHER EXPENSES">Other Expenses</option>
                             <!-- Add more options as needed -->
                         </select><br>
@@ -123,6 +127,39 @@
                 "scrollY": "270px",
                 "scrollCollapse": true,
                 "paging": false
+            });
+
+            $('#item-table tbody').on('click', '.delete-btn', function() {
+                var date = $(this).data('date');
+                var expenseName = $(this).data('expense-name');
+                var expenseHead = $(this).data('expense-head');
+                var expenseAmount = $(this).data('expense-amount');
+
+                var confirmation = confirm("Are you sure you want to delete this expense?");
+                if (confirmation) {
+                    // Create a form and submit it to delete the expense
+                    var form = $('<form>', {
+                        'method': 'POST',
+                        'action': '/deleteExpense'
+                    }).append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'expense_name',
+                        'value': expenseName
+                    })).append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'expense_head',
+                        'value': expenseHead
+                    })).append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'expense_amount',
+                        'value': expenseAmount
+                    })).append($('<input>', {
+                        'type': 'hidden',
+                        'name': 'date',
+                        'value': date
+                    }));
+                    form.appendTo('body').submit();
+                }
             });
 
             $('#apply-filters').on('click', function() {
