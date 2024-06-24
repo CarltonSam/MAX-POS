@@ -1,155 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
-    <link href="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.css" rel="stylesheet">
-    <style>
-        /* Add your custom styles here */
-        .sidebar ul li a.highlight {
-            background-color: #1e2389; /* Dark Blue */
-            color: #fff; /* White */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
-        }
-
-        .item-card {
-            cursor: pointer; /* Change cursor to pointer */
-        }
-
-        .shopping-cart {
-            position: fixed;
-            top: 30px;
-            right: 5px;
-            width: 470px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff; /* White */
-        }
-
-        .shopping-cart h2 {
-            margin-top: 0;
-            font-size: 20px;
-            color: #1e2389; /* Dark Blue */
-        }
-
-        #cart-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        #cart-table th, #cart-table td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        #cart-table th {
-            background-color: #f2f2f2;
-        }
-
-        #cart-table tbody {
-            display: block;
-            max-height: 230px; /* Adjust height as needed for 6 items */
-            overflow-y: scroll;
-            overflow-x: hidden;
-        }
-
-        #cart-table thead, #cart-table tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed; /* Ensures the table layout is fixed */
-        }
-
-        #cart-table thead {
-            width: calc(100% - 2px); /* Adjust for scrollbar */
-        }
-
-        #cart-table td input {
-            width: 50px;
-        }
-
-        #total-price {
-            margin-top: 10px;
-            font-size: 16px;
-            color: #1e2389; /* Dark Blue */
-        }
-
-        .main-container {
-            display: flex;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-right: 450px; /* Space for the shopping cart */
-        }
-
-        .item-card-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .item-card {
-            width: calc(20% - 25px); /* 5 items per row with some spacing */
-            padding: 5px;  /* Reduced padding */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff; /* White */
-            box-sizing: border-box; /* Ensure padding and border are included in the width */
-        }
-
-        .item-card h3 {
-            margin-top: 5px;  /* Reduced margin */
-            font-size: 16px;  /* Reduced font size */
-            color: #1e2389; /* Dark Blue */
-        }
-
-        .item-card h4 {
-            margin-top: 5px;  /* Reduced margin */
-            margin-bottom: 5px;  /* Reduced margin */
-            font-size: 14px;  /* Adjusted font size if needed */
-        }
-
-        .item-card p {
-            margin-top: 5px;
-            font-size: 12px;  /* Reduced font size */
-            color: #555;
-        }
-
-        .shopping-cart input[type="text"] {
-            /* Styles for text input fields */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-top: 5px; /* Add spacing below input fields */
-        }
-
-        .shopping-cart input[type="date"] {
-            /* Styles for text input fields */
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            margin-top: 5px; /* Add spacing below input fields */
-        }
-
-        .shopping-cart select{
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            margin-top: 5px; /* Add spacing below input fields */
-        }
-    </style>
-</head>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/styles.css') }}">
+        <style>
+            /* Add your custom styles here */
+            .sidebar ul li a.highlight {
+                background-color: #1e2389; /* Dark Blue */
+                color: #fff; /* White */
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add shadow on hover */
+            }
+    
+            .item-card {
+                cursor: pointer; /* Change cursor to pointer */
+            }
+    
+            .shopping-cart {
+                position: fixed;
+                top: 30px;
+                right: 5px;
+                width: 470px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #ffffff; /* White */
+            }
+    
+            .shopping-cart h2 {
+                margin-top: 0;
+                font-size: 20px;
+                color: #1e2389; /* Dark Blue */
+            }
+    
+            #cart-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+    
+            #cart-table th, #cart-table td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+    
+            #cart-table th {
+                background-color: #f2f2f2;
+            }
+    
+            #cart-table tbody {
+                display: block;
+                max-height: 230px; /* Adjust height as needed for 6 items */
+                overflow-y: scroll;
+                overflow-x: hidden;
+            }
+    
+            #cart-table thead, #cart-table tbody tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed; /* Ensures the table layout is fixed */
+            }
+    
+            #cart-table thead {
+                width: calc(100% - 2px); /* Adjust for scrollbar */
+            }
+    
+            #cart-table td input {
+                width: 50px;
+            }
+    
+            #total-price {
+                margin-top: 10px;
+                font-size: 16px;
+                color: #1e2389; /* Dark Blue */
+            }
+    
+            .main-container {
+                display: flex;
+            }
+    
+            .main-content {
+                flex: 1;
+                margin-right: 450px; /* Space for the shopping cart */
+            }
+    
+            .item-card-container {
+                display: flex;
+                flex-wrap: wrap;
+            }
+    
+            .item-card {
+                width: calc(20% - 25px); /* 5 items per row with some spacing */
+                padding: 5px;  /* Reduced padding */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin: 5px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background-color: #ffffff; /* White */
+                box-sizing: border-box; /* Ensure padding and border are included in the width */
+            }
+    
+            .item-card h3 {
+                margin-top: 5px;  /* Reduced margin */
+                font-size: 16px;  /* Reduced font size */
+                color: #1e2389; /* Dark Blue */
+            }
+    
+            .item-card h4 {
+                margin-top: 5px;  /* Reduced margin */
+                margin-bottom: 5px;  /* Reduced margin */
+                font-size: 14px;  /* Adjusted font size if needed */
+            }
+    
+            .item-card p {
+                margin-top: 5px;
+                font-size: 12px;  /* Reduced font size */
+                color: #555;
+            }
+    
+            .shopping-cart input[type="text"] {
+                /* Styles for text input fields */
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                margin-top: 5px; /* Add spacing below input fields */
+            }
+    
+            .shopping-cart input[type="date"] {
+                /* Styles for text input fields */
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                margin-top: 5px; /* Add spacing below input fields */
+            }
+    
+            .shopping-cart select{
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                margin-bottom: 10px;
+                margin-top: 5px; /* Add spacing below input fields */
+            }
+        </style>
+    </head>
 <body>
     <div class="main-container">
         <div class="toolbar">
@@ -188,11 +189,11 @@
         <form id="checkout-form" action="/checkout" method="POST">
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" required><br>
-            <label for="customer_id">Customer ID:</label>
+            <label for="customer_id">Customer Name:</label>
                 <select id="customer_id" name="customer_id" required>
                     <option value="" selected disabled>Select Customer ID</option>
                     {% for customer in customers %}
-                        <option value="{{ customer.customer_id }}" data-customer-name="{{ customer.name }}">{{ customer.customer_id }}</option>
+                        <option value="{{ customer.customer_id }}" data-customer-name="{{ customer.customer_id }}">{{ customer.name }}</option>
                     {% endfor %}
                 </select>
                 <span id="customer_name_label"></span><br>
@@ -216,21 +217,39 @@
                 <!-- Cart items will be dynamically added here -->
             </tbody>
         </table>
-        <div id="total-price">Total Price: 0.00</div>
+        <div id="total-price">Total: $0.00</div>
+    </div>
+
+    <div id="dialog-overlay"></div>
+    <div id="dialog-box">
+        <h2>Select an Item</h2>
+        <div class="item-card-container">
+            {% for item in items %}
+            <div class="item-card">
+                <h3>{{ item.item_name }}</h3>
+                <h4>Price: {{ item.price }}</h4>
+                <p hidden>{{item.item_id}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <button id="dialog-close">Close</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.datatables.net/v/dt/dt-2.0.3/datatables.min.js"></script>
-    <script>
-        document.getElementById('download-btn').addEventListener('click', function() {
-            window.location.href = '/cashbook/download';
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Initialize Select2 on customer_id select element
+            $('#customer_id').select2({
+                placeholder: 'Select Customer Name',
+                allowClear: true
+            });
             $('#customer_id').change(function() {
-                    var selectedCustomerName = $('#customer_id option:selected').data('customer-name');
-                    $('#customer_name_label').text('Customer Name: ' + selectedCustomerName);
-                });
+                var selectedCustomerName = $('#customer_id option:selected').data('customer-name');
+                $('#customer_id').select2('data')[0].text = selectedCustomerName;
+                $('#customer_id').select2('destroy').select2();
+                $('#customer_name_label').text('Customer ID: ' + selectedCustomerName);
+            });
             // Function to gather cart data
             function gatherCartData() {
                 var cartData = [];
