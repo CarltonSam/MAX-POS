@@ -56,7 +56,6 @@ def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form
             total_price=total_price
             )
         db.add(db_item)
-    db.commit()
     customer = db.query(CustomerDetails).filter_by(customer_id=customer_id).first()
     db_orderdetails = OrderDetails(
         order_id=order_id,

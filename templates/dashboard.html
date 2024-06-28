@@ -243,14 +243,22 @@
                 var tillDate = $('#till-date').val();
                 var status = $('#status-filter').val();
 
-                // Filter the table based on the inputs
                 $.fn.dataTable.ext.search.push(
                     function(settings, data, dataIndex) {
-                        var date = data[1]; // Use data for the date column
+                        var orderDate = data[1]; // Use data for the date column
+                        var readyDate = data[6]; // Use data for the ready_date column
+                        var deliveryDate = data[7]; // Use data for the delivery_date column
                         var orderStatus = data[5]; // Use data for the status column
 
-                        if ((fromDate === "" || date >= fromDate) &&
-                            (tillDate === "" || date <= tillDate) &&
+                        var dateToFilter = orderDate;
+                        if (status === "READY") {
+                            dateToFilter = readyDate;
+                        } else if (status === "DELIVERED") {
+                            dateToFilter = deliveryDate;
+                        }
+
+                        if ((fromDate === "" || dateToFilter >= fromDate) &&
+                            (tillDate === "" || dateToFilter <= tillDate) &&
                             (status === "" || orderStatus === status)) {
                             return true;
                         }
@@ -321,7 +329,7 @@
                 table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
                     var data = this.data();
                     totalItems += parseInt(data[4]); // Assuming the total items column is at index 4
-                    totalPrice += parseFloat(data[11]); // Assuming cash and bank columns are at indices 8 and 9
+                    totalPrice += parseFloat(data[9]) + parseFloat(data[10]) + parseFloat(data[11]); // Assuming cash, advance_paid, and due columns are at indices 9, 10, and 11 // Assuming cash and bank columns are at indices 8 and 9
                 });
 
                 $('#total-items').text(totalItems);

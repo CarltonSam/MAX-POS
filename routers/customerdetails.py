@@ -57,3 +57,11 @@ async def edit_order(customer_id: str = Form(...),
     db.commit()
     response = RedirectResponse(url='/customers', status_code=status.HTTP_302_FOUND)
     return response
+
+@router.post('/deleteCustomer')
+async def delete_order(customer_id: str = Form(...), db: Session = Depends(get_db)):
+    order = db.query(CustomerDetails).filter_by(customer_id=customer_id).first()
+    db.delete(order)
+    db.commit()
+    response = RedirectResponse(url='/customers', status_code=status.HTTP_302_FOUND)
+    return response

@@ -70,21 +70,20 @@ def download_cashbook_data(from_date: Optional[str] = Query(None, alias="from_da
 @router.get('/dashboard', response_class=HTMLResponse, include_in_schema=False)
 def dashboard(request: Request, from_date: Optional[str] = None, till_date: Optional[str] = None, status: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(OrderDetails)
-
     if from_date:
         query = query.filter(OrderDetails.date >= from_date)
     if till_date:
         query = query.filter(OrderDetails.date <= till_date)
     if status:
         query = query.filter(OrderDetails.status == status)
-
     orders = query.all()
     received = db.query(OrderDetails).filter_by(status="RECEIVED").all()
     ready = db.query(OrderDetails).filter_by(status="READY").all()
     delivered = db.query(OrderDetails).filter_by(status="DELIVERED").all()
 
     total_items = sum(order.total_items for order in orders)
-    total_price = sum(order.due for order in orders)
+    total_price = sum(order.cash + order.advance_paid + order.due for order in orders)
+
 
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
