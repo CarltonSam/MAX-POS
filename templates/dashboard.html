@@ -135,7 +135,7 @@
                 <label for="order_id">Order ID:</label>
                 <input type="text" id="order_id" name="order_id" readonly>
                 <label for="order_date">Date:</label>
-                <input type="date" id="order_date" name="order_date">
+                <input type="date" id="order_date" name="order_date" readonly>
                 <label for="customer_id">Customer ID:</label>
                 <input type="text" id="customer_id" name="customer_id" readonly>
                 <label for="cust_name">Customer Name:</label>
@@ -148,6 +148,8 @@
                     <option value="READY">READY</option>
                     <option value="DELIVERED">DELIVERED</option>
                 </select>
+                <label for="due">Due:</label>
+                <input type="text" id="due" name="due" readonly>
             </div>
             <div class="right-column">
                 <label for="ready_date">Ready Date:</label>
@@ -158,10 +160,13 @@
                 <input type="text" id="note" name="note">
                 <label for="cash">Cash:</label>
                 <input type="text" id="cash" name="cash">
+                <label for="cashbook_date">Cash Date:</label>
+                <input type="date" id="cashbook_date" name="cashbook_date">
                 <label for="advance_paid">Advance Paid:</label>
                 <input type="text" id="advance_paid" name="advance_paid">
-                <label for="due">Due:</label>
-                <input type="text" id="due" name="due" readonly>
+                <label for="advance_date">Advance Date:</label>
+                <input type="date" id="advance_date" name="advance_date">
+                
                 <!-- Add other fields with name attributes similarly -->
             </div>
             <button type="submit">Submit Order</button>
@@ -215,12 +220,15 @@
     </script>
     <script>
         $(document).ready(function() {
+            var cashOriginalValue = ""; // Variable to store original cash value
+            var advancePaidOriginalValue = ""; // Variable to store original advance_paid value
+    
             var table = $('#item-table').DataTable({
                 "scrollY": "270px",
                 "scrollCollapse": true,
                 "paging": false
             });
-
+    
             $('#item-table tbody').on('click', '.delete-btn', function() {
                 var orderId = $(this).closest('tr').find('td:first').text();
                 var confirmation = confirm("Are you sure you want to delete this order?");
@@ -237,26 +245,26 @@
                     form.appendTo('body').submit();
                 }
             });
-
+    
             $('#apply-filters').on('click', function() {
                 var fromDate = $('#from-date').val();
                 var tillDate = $('#till-date').val();
                 var status = $('#status-filter').val();
-
+    
                 $.fn.dataTable.ext.search.push(
                     function(settings, data, dataIndex) {
                         var orderDate = data[1]; // Use data for the date column
                         var readyDate = data[6]; // Use data for the ready_date column
                         var deliveryDate = data[7]; // Use data for the delivery_date column
                         var orderStatus = data[5]; // Use data for the status column
-
+    
                         var dateToFilter = orderDate;
                         if (status === "READY") {
                             dateToFilter = readyDate;
                         } else if (status === "DELIVERED") {
                             dateToFilter = deliveryDate;
                         }
-
+    
                         if ((fromDate === "" || dateToFilter >= fromDate) &&
                             (tillDate === "" || dateToFilter <= tillDate) &&
                             (status === "" || orderStatus === status)) {
@@ -265,22 +273,22 @@
                         return false;
                     }
                 );
-
+    
                 table.draw();
                 calculateTotals(table);
                 $.fn.dataTable.ext.search.pop();
             });
-
+    
             $('#view-item-table').DataTable({
                 "paging": false, // Disable pagination
                 "scrollCollapse": true,
                 "scrollY": "100px"
             });
-
+    
             $('#item-table tbody').on('click', '.edit-btn', function() {
                 var rowData = $(this).closest('tr').find('td');
                 var dialogForm = $(".dialog-form");
-
+    
                 // Populate dialog form with row data
                 dialogForm.find("#order_id").val(rowData.eq(0).text());
                 dialogForm.find("#order_date").val(rowData.eq(1).text());
@@ -290,52 +298,72 @@
                 dialogForm.find("#order_status").val(rowData.eq(5).text());
                 dialogForm.find("#ready_date").val(rowData.eq(6).text());
                 dialogForm.find("#delivery_date").val(rowData.eq(7).text());
-                dialogForm.find("#cash").val(rowData.eq(9).text());
-                dialogForm.find("#note").val(rowData.eq(8).text());
-                dialogForm.find("#advance_paid").val(rowData.eq(10).text());
                 dialogForm.find("#due").val(rowData.eq(11).text());
-                // Populate other fields similarly
-
+    
+                // Store original values for comparison
+                cashOriginalValue = rowData.eq(9).text(); // Assuming cash column is at index 9
+                advancePaidOriginalValue = rowData.eq(10).text();
+                noteOriginalValue =  rowData.eq(8).text();// Assuming advance_paid column is at index 10
+    
+                // Set cash and advance_paid to blank if '0' or 'None'
+                var cashValue = cashOriginalValue === '0' || cashOriginalValue === 'None' ? '' : cashOriginalValue;
+                var advancePaidValue = advancePaidOriginalValue === '0' || advancePaidOriginalValue === 'None' ? '' : advancePaidOriginalValue;
+                var noteValue = noteOriginalValue === '0' || noteOriginalValue === 'None' ? '' : noteOriginalValue;
+                dialogForm.find("#cash").val(cashValue);
+                dialogForm.find("#advance_paid").val(advancePaidValue);
+                dialogForm.find("#note").val(noteValue);
+    
+                // Set the cashbook date to the current date
+    
                 // Open dialog box
                 $("#dialog-for").dialog({
                     modal: true
                 });
             });
-            $('#item-table tbody').on('click', '.view-btn', function () {
-            // Clear any previous content in the view dialog
-            $("#view-item-table-body").empty();
+    
+            $('.dialog-form').on('submit', function(e) {
+                var status = $("#order_status").val();
+                var readyDate = $("#ready_date").val().trim();
+                var deliveryDate = $("#delivery_date").val().trim();
 
-                // Get the order ID from the clicked row
-                var orderId = $(this).closest('tr').find('td:first').text();
-                // Set the value of the hidden input field
-                $(".selected-order-id").val(orderId);
-                console.log("Selected order ID:", orderId);
-
-
-                // Assuming orderItems is a JavaScript array containing the order items
-                // Loop through the order items and add them to the view dialog
-                    // Check if the order ID matches
-
-                // Open the view dialog box
-                $("#dialog-for-view").dialog({
-                    modal: true
-                });
+                if ((status === "READY" && readyDate === '') || (status === "DELIVERED" && deliveryDate === '')) {
+                    alert("Please enter the " + (status === "READY" ? "Ready Date" : "Delivery Date"));
+                    e.preventDefault();
+                    return;
+                }
+                var cashCurrentValue = $("#cash").val().trim() === '' ? '0' : $("#cash").val();
+                var advancePaidCurrentValue = $("#advance_paid").val().trim() === '' ? '0' : $("#advance_paid").val();
+    
+                // Check if values have changed
+                if (cashCurrentValue !== cashOriginalValue && $("#cashbook_date").val() === '') {
+                    alert("Please enter Cash Date.");
+                    e.preventDefault(); // Prevent form submission
+                    return;
+                }
+                if (advancePaidCurrentValue !== advancePaidOriginalValue && $("#advance_date").val() === '') {
+                    alert("Please enter Advance Date.");
+                    e.preventDefault(); // Prevent form submission
+                    return;
+                }
+    
+                // Continue with form submission
             });
-
+    
             function calculateTotals(table) {
                 var totalItems = 0;
                 var totalPrice = 0;
-
+    
                 table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
                     var data = this.data();
                     totalItems += parseInt(data[4]); // Assuming the total items column is at index 4
-                    totalPrice += parseFloat(data[9]) + parseFloat(data[10]) + parseFloat(data[11]); // Assuming cash, advance_paid, and due columns are at indices 9, 10, and 11 // Assuming cash and bank columns are at indices 8 and 9
+                    totalPrice += parseFloat(data[9]) + parseFloat(data[10]) + parseFloat(data[11]); // Assuming cash, advance_paid, and due columns are at indices 9, 10, and 11
                 });
-
+    
                 $('#total-items').text(totalItems);
                 $('#total-price').text(totalPrice.toFixed(2));
             }
         });
     </script>
+    
 </body>
 </html>

@@ -104,36 +104,36 @@ async def edit_order(order_id: str = Form(...),
                      order_status: str = Form(...),
                      ready_date: Optional[str] = Form(None),
                      delivery_date: Optional[str] = Form(None),
-                     cash: Optional[str] = Form(...),
+                     cash: Optional[str] = Form('0'),
+                     cashbook_date: Optional[str] = Form(None),
                      note: Optional[str] = Form(None),
-                     advance_paid: str = Form(...),
+                     advance_paid: Optional[str] = Form('0'),
+                     advance_date: Optional[str] = Form(None),
                      due: str = Form(...),
                      db: Session = Depends(get_db)):
     total_price = db.query(func.sum(OrderItems.total_price)).filter_by(order_id=order_id).scalar()
     order = db.query(OrderDetails).filter_by(order_id=order_id).first()
-    order.order_id = order_id
-    order.date = order_date
-    order.customer_id = customer_id
-    order.cust_name = cust_name
-    order.total_items = total_items
     order.status = order_status
-    order.ready_date = ready_date if ready_date else None
-    order.delivery_date = delivery_date if delivery_date else None
+    if ready_date:
+        order.ready_date = ready_date
+    if delivery_date:
+        order.delivery_date = delivery_date
     if int(order.cash) != int(cash):
         cashbook_entry = Cashbook(
-            date = date.today(),
+            date = cashbook_date,
             category = order_id,
             text = note,
             debit = cash
         )
         order.cash = cash
         db.add(cashbook_entry)
-    order.note = note
+    if note:
+        order.note = note
     if int(order.advance_paid) != int(advance_paid):
         cashbook_entry = Cashbook(
-            date = date.today(),
+            date = advance_date,
             category = order_id,
-            text = note,
+            text = 'advance paid',
             debit = advance_paid
         )
         order.advance_paid = advance_paid
@@ -147,9 +147,9 @@ async def edit_order(order_id: str = Form(...),
 async def delete_order(order_id: str = Form(...), db: Session = Depends(get_db)):
     order = db.query(OrderDetails).filter_by(order_id=order_id).first()
     order_items=db.query(OrderItems).filter_by(order_id=order_id).all()
-    cashbook=db.query(Cashbook).filter_by(category=order_id).first()
-    if cashbook:
-        db.delete(cashbook)
+    cashbook=db.query(Cashbook).filter_by(category=order_id).all()
+    for cash in cashbook:
+        db.delete(cash)
     if order:
         db.delete(order)
 
