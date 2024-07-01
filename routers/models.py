@@ -86,6 +86,7 @@ class Cashbook(Base):
     text = Column(String)
     credit = Column(Integer,default=0)
     debit = Column(Integer,default=0)
+    balance = Column(Integer,default=0)
 
 
 Base.metadata.create_all(bind=engine)
