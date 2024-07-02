@@ -64,6 +64,8 @@ def cart(date: str = Form(...),order_id: str = Form(...),customer_id: str = Form
         cust_name=customer.name,
         total_items=total_items,
         status='RECEIVED',
+        ready_date="",
+        delivery_date="",
         due = total
         )
     db.add(db_orderdetails)
