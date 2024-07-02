@@ -51,13 +51,15 @@ def download_cashbook_data(from_date: Optional[str] = Query(None, alias="from_da
 @router.get('/expenses',response_class=HTMLResponse,include_in_schema=False)
 def form(request:Request,from_date: Optional[str] = None, till_date: Optional[str] = None,db: Session = Depends(get_db)):
     all_items = db.query(Expenses).all()
-    query = db.query(Cashbook)
+    query = db.query(Expenses)
 
     if from_date:
-        query = query.filter(Cashbook.date >= from_date)
+        query = query.filter(Expenses.date >= from_date)
     if till_date:
-        query = query.filter(Cashbook.date <= till_date)
-    return templates.TemplateResponse("/expenses.html",{"request":request,"expenses":all_items})
+        query = query.filter(Expenses.date <= till_date)
+
+    total_price = sum(order.expense_amount for order in query)
+    return templates.TemplateResponse("/expenses.html",{"request":request,"expenses":all_items,'total_price':total_price})
 
 @router.post('/createExpense')
 async def create_customer(expense_head: Optional[str] = Form(...),expense_name: str = Form(...), date: str = Form(...), expense_amount: int = Form(...), db: Session = Depends(get_db)):
