@@ -53,7 +53,6 @@ def download_cashbook_data(from_date: Optional[str] = Query(None, alias="from_da
 
 @router.get('/cashbook',response_class=HTMLResponse,include_in_schema=False)
 def form(request:Request,from_date: Optional[str] = None, till_date: Optional[str] = None,db: Session = Depends(get_db)):
-    all_items = db.query(Cashbook).all()
     query = db.query(Cashbook)
 
     if from_date:
@@ -61,9 +60,9 @@ def form(request:Request,from_date: Optional[str] = None, till_date: Optional[st
     if till_date:
         query = query.filter(Cashbook.date <= till_date)
 
-    orders = query.all()
+    orders = query.order_by(Cashbook.id).all()
     total_debit = sum(order.debit or 0 for order in orders if order.credit is not None)
     total_credit = sum(order.credit or 0 for order in orders if order.debit is not None)
     total_price = sum(order.debit or 0 for order in orders if order.credit is not None) - sum(order.credit or 0 for order in orders if order.debit is not None)
 
-    return templates.TemplateResponse("/cashbook.html",{"request":request,"cashbook":all_items,"total_price":total_price,"total_debit":total_debit,"total_credit":total_credit})
+    return templates.TemplateResponse("/cashbook.html",{"request":request,"cashbook":orders,"total_price":total_price,"total_debit":total_debit,"total_credit":total_credit})
