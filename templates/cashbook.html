@@ -36,20 +36,6 @@
             </ul>
         </div>
         <div class="main-content">
-            <div class="status-sections">
-                <div class="status-item">
-                    <h2><i class="fa-solid fa-circle-info"></i> ORDERS</h2>
-                    <p id="ready-orders">{{ordered}}</p>
-                </div>
-                <div class="status-item">
-                    <h2><i class="fa-solid fa-box"></i>   READY</h2>
-                    <p id="ready-to-deliver-orders">{{ready}}</p>
-                </div>
-                <div class="status-item">
-                    <h2><i class="fa-solid fa-truck-fast"></i>    DELIVERED</h2>
-                    <p id="delivered-orders">{{delivered}}</p>
-                </div>    
-            </div>
 
             <!-- Filter Section -->
             <div class="filter-section">
@@ -165,8 +151,8 @@
                 });
 
                 $('#total-price').text(totalPrice.toFixed(2));
-                $('#total-debit').text(totalDebit.toFixed(3));
-                $('#total-credit').text(totalCredit.toFixed(4));
+                $('#total-debit').text(totalDebit.toFixed(2));
+                $('#total-credit').text(totalCredit.toFixed(2));
             }
         });
     </script>
