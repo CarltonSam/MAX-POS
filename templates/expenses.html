@@ -48,6 +48,21 @@
                     <label for="till-date">Till Date:</label>
                     <input type="date" id="till-date">
                 </div>
+                <div class="filter-group">
+                    <label for="status-filter">Expense:</label>
+                    <select id="status-filter">
+                        <option value="">All</option>
+                        <option value="Rent">Rent</option>
+                        <option value="SNACKS">Snacks</option>
+                        <option value="TRANS. ALLOWANCE">TRANS. ALLOWANCE</option>
+                        <option value="CHEMICAL">Chemical</option>
+                        <option value="SALARY">Salary</option>
+                        <option value="ADVANCE SALARY">Advance Salary</option>
+                        <option value="WATER AND ELECTRICITY">Water and Electricity</option>
+                        <option value="GANESAN">Ganesan</option>
+                        <option value="OTHER EXPENSES">Other Expenses</option>
+                    </select>
+                </div>
                 <button id="apply-filters">Apply Filters</button>
                 <button id="download-btn">Download Excel</button>
             </div>
@@ -165,14 +180,19 @@
             $('#apply-filters').on('click', function() {
                 var fromDate = $('#from-date').val();
                 var tillDate = $('#till-date').val();
+                var statusFilter = $('#status-filter').val();
+
+                $.fn.dataTable.ext.search = [];
 
                 // Filter the table based on the inputs
                 $.fn.dataTable.ext.search.push(
                     function(settings, data, dataIndex) {
-                        var date = data[0]; // Use data for the date column // Use data for the status column
+                        var date = data[0]; // Use data for the date column
+                        var status = data[1]; // Use data for the status column
 
                         if ((fromDate === "" || date >= fromDate) &&
-                            (tillDate === "" || date <= tillDate) ){
+                            (tillDate === "" || date <= tillDate) &&
+                            (statusFilter === "" || status === statusFilter)) {
                             return true;
                         }
                         return false;
